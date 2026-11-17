@@ -202,7 +202,7 @@
     <!-- 3번: 주휴수당 -->
     <div id="calc3" class="calculator-content">
         <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="text" id="hourlyWage" value="10,030" oninput="formatInputNumber(this, 'wageUnit')"></div>
-        <div class="korean-unit" id="wageUnit">1만 원</div>
+        <div class="korean-unit" id="wageUnit">1만 30 원</div>
         <div class="form-group"><label for="weeklyHours">일주일 총 근로시간 (시간)</label><input type="number" id="weeklyHours" value="40"></div>
         <button class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
         <div class="result-box" id="resultBox3">
@@ -274,18 +274,22 @@
 
 <script>
     function switchTab(tabNumber) {
-        const buttons = document.querySelectorAll('.tab-btn');
-        buttons.forEach(btn => btn.classList.remove('active'));
+        var buttons = document.querySelectorAll('.tab-btn');
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove('active');
+        }
 
-        const contents = document.querySelectorAll('.calculator-content');
-        contents.forEach(content => content.classList.remove('active'));
+        var contents = document.querySelectorAll('.calculator-content');
+        for (var j = 0; j < contents.length; j++) {
+            contents[j].classList.remove('active');
+        }
 
         buttons[tabNumber - 1].classList.add('active');
         document.getElementById('calc' + tabNumber).classList.add('active');
     }
 
     function formatInputNumber(input, unitId) {
-        let value = input.value.replace(/[^0-9]/g, '');
+        var value = input.value.replace(/[^0-9]/g, '');
         if (value) {
             input.value = Number(value).toLocaleString();
             if (unitId) {
@@ -301,32 +305,36 @@
 
     function getKoreanUnit(num) {
         if (num === 0) return '0 원';
-        const 억 = Math.floor(num / 100000000);
-        const 만 = Math.floor((num % 100000000) / 10000);
-        let result = '';
-        if (억 > 0) result += 억 + '억 ';
-        if (만 > 0) result += 만.toLocaleString() + '만 ';
+        var eok = Math.floor(num / 100000000);
+        var man = Math.floor((num % 100000000) / 10000);
+        var rest = num % 10000;
+        
+        var result = '';
+        if (eok > 0) result += eok + '억 ';
+        if (man > 0) result += man.toLocaleString() + '만 ';
+        if (rest > 0) result += rest.toLocaleString() + ' ';
+        
         return result.trim() + ' 원';
     }
 
     function getCleanNumber(id) {
-        const val = document.getElementById(id).value.replace(/[^0-9]/g, '');
+        var val = document.getElementById(id).value.replace(/[^0-9]/g, '');
         return val ? Number(val) : 0;
     }
 
     function calcRent() {
-        const jeonse = getCleanNumber('jeonseDeposit');
-        const monthlyDep = getCleanNumber('monthlyDeposit');
-        const rate = parseFloat(document.getElementById('interestRate').value) || 0;
+        var jeonse = getCleanNumber('jeonseDeposit');
+        var monthlyDep = getCleanNumber('monthlyDeposit');
+        var rate = parseFloat(document.getElementById('interestRate').value) || 0;
 
-        const diff = jeonse - monthlyDep;
+        var diff = jeonse - monthlyDep;
         if (diff <= 0) {
             alert('기존 전세 보증금보다 변경할 보증금이 더 클 수 없습니다.');
             return;
         }
 
-        const annualRent = diff * (rate / 100);
-        const monthlyRent = Math.round(annualRent / 12);
+        var annualRent = diff * (rate / 100);
+        var monthlyRent = Math.round(annualRent / 12);
 
         document.getElementById('resDiffDeposit').innerText = diff.toLocaleString() + ' 원';
         document.getElementById('resMonthlyRent').innerText = monthlyRent.toLocaleString() + ' 원';
@@ -334,16 +342,16 @@
     }
 
     function calcTax() {
-        const salary = getCleanNumber('salary');
-        const card = getCleanNumber('cardSpent');
+        var salary = getCleanNumber('salary');
+        var card = getCleanNumber('cardSpent');
 
-        const cardDeductionBase = salary * 0.25;
-        let cardDeduction = 0;
+        var cardDeductionBase = salary * 0.25;
+        var cardDeduction = 0;
         if (card > cardDeductionBase) {
             cardDeduction = Math.round((card - cardDeductionBase) * 0.3);
         }
 
-        const estimatedRefund = Math.round(cardDeduction * 0.12);
+        var estimatedRefund = Math.round(cardDeduction * 0.12);
 
         document.getElementById('resDeduction').innerText = cardDeduction.toLocaleString() + ' 원';
         document.getElementById('resRefund').innerText = estimatedRefund.toLocaleString() + ' 원';
@@ -351,19 +359,19 @@
     }
 
     function calcSalary() {
-        const wage = getCleanNumber('hourlyWage');
-        const hours = parseFloat(document.getElementById('weeklyHours').value) || 0;
+        var wage = getCleanNumber('hourlyWage');
+        var hours = parseFloat(document.getElementById('weeklyHours').value) || 0;
 
-        let holidayStatus = "대상 아님 (주 15시간 미만)";
-        let weeklyHolidayPay = 0;
+        var holidayStatus = "대상 아님 (주 15시간 미만)";
+        var weeklyHolidayPay = 0;
 
         if (hours >= 15) {
             holidayStatus = "지급 대상 (주 15시간 이상)";
             weeklyHolidayPay = (hours / 40) * 8 * wage;
         }
 
-        const totalWeeklyPay = (hours * wage) + weeklyHolidayPay;
-        const totalMonthPay = Math.round(totalWeeklyPay * 4.345);
+        var totalWeeklyPay = (hours * wage) + weeklyHolidayPay;
+        var totalMonthPay = Math.round(totalWeeklyPay * 4.345);
 
         document.getElementById('resHolidayPayStatus').innerText = holidayStatus;
         document.getElementById('resTotalMonthPay').innerText = totalMonthPay.toLocaleString() + ' 원';
@@ -371,14 +379,14 @@
     }
 
     function calcNetSalary() {
-        const preTax = getCleanNumber('preTaxSalary');
-        const nationalPension = preTax * 0.045;
-        const healthInsurance = preTax * 0.03545;
-        const employmentInsurance = preTax * 0.009;
-        const incomeTax = preTax * 0.03;
+        var preTax = getCleanNumber('preTaxSalary');
+        var nationalPension = preTax * 0.045;
+        var healthInsurance = preTax * 0.03545;
+        var employmentInsurance = preTax * 0.009;
+        var incomeTax = preTax * 0.03;
 
-        const totalTax = Math.round(nationalPension + healthInsurance + employmentInsurance + incomeTax);
-        const netPay = preTax - totalTax;
+        var totalTax = Math.round(nationalPension + healthInsurance + employmentInsurance + incomeTax);
+        var netPay = preTax - totalTax;
 
         document.getElementById('resTotalTax').innerText = totalTax.toLocaleString() + ' 원';
         document.getElementById('resNetPay').innerText = netPay.toLocaleString() + ' 원';
@@ -386,11 +394,11 @@
     }
 
     function calcRetirement() {
-        const threeMonthsPay = getCleanNumber('retireMonthsPay');
-        const workingDays = Number(document.getElementById('totalWorkingYears').value) || 0;
+        var threeMonthsPay = getCleanNumber('retireMonthsPay');
+        var workingDays = Number(document.getElementById('totalWorkingYears').value) || 0;
 
-        const avgDailyWage = threeMonthsPay / 90;
-        const retirementPay = Math.round(avgDailyWage * 30 * (workingDays / 365));
+        var avgDailyWage = threeMonthsPay / 90;
+        var retirementPay = Math.round(avgDailyWage * 30 * (workingDays / 365));
 
         document.getElementById('resAvgWage').innerText = Math.round(avgDailyWage).toLocaleString() + ' 원';
         document.getElementById('resRetirementPay').innerText = retirementPay.toLocaleString() + ' 원';
@@ -398,21 +406,21 @@
     }
 
     function calcUnemployment() {
-        const monthPay = getCleanNumber('unemploymentMonthPay');
-        const dailyWage = monthPay / 30;
-        let dailyUnemp = Math.round(dailyWage * 0.6);
+        var monthPay = getCleanNumber('unemploymentMonthPay');
+        var dailyWage = monthPay / 30;
+        var dailyUnemp = Math.round(dailyWage * 0.6);
 
         if (dailyUnemp < 66000) dailyUnemp = 66000;
         if (dailyUnemp > 66131) dailyUnemp = 66131;
 
-        const period = document.getElementById('employmentPeriod').value;
-        let days = 150;
+        var period = document.getElementById('employmentPeriod').value;
+        var days = 150;
         if (period === '3') days = 180;
         else if (period === '5') days = 210;
         else if (period === '10') days = 240;
         else if (period === '10+') days = 270;
 
-        const totalUnemp = dailyUnemp * days;
+        var totalUnemp = dailyUnemp * days;
 
         document.getElementById('resDailyUnemp').innerText = dailyUnemp.toLocaleString() + ' 원';
         document.getElementById('resTotalUnemp').innerText = totalUnemp.toLocaleString() + ' 원';
@@ -420,22 +428,22 @@
     }
 
     function calcAge() {
-        const birthVal = document.getElementById('birthDate').value;
+        var birthVal = document.getElementById('birthDate').value;
         if (!birthVal) {
             alert('생년월일을 선택해주세요.');
             return;
         }
 
-        const birth = new Date(birthVal);
-        const today = new Date();
+        var birth = new Date(birthVal);
+        var today = new Date();
 
-        let age = today.getFullYear() - birth.getFullYear();
-        const m = today.getMonth() - birth.getMonth();
+        var age = today.getFullYear() - birth.getFullYear();
+        var m = today.getMonth() - birth.getMonth();
         if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
             age--;
         }
 
-        const yearAge = today.getFullYear() - birth.getFullYear();
+        var yearAge = today.getFullYear() - birth.getFullYear();
 
         document.getElementById('resAge').innerText = age + ' 세';
         document.getElementById('resYearAge').innerText = yearAge + ' 세';
