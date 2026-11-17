@@ -6,7 +6,6 @@
     <title>종합 생활 금융 계산기 모음 (전월세·연말정산·주휴수당 등)</title>
     <meta name="description" content="전월세 전환율, 연말정산, 주휴수당, 세전세후 월급, 퇴직금, 실업급여, 만나이까지 한 번에 계산하는 종합 금융 유틸리티 도구입니다.">
     
-    <!-- 구글 애드센스 및 검색 등록용 태그 -->
     <meta name="google-site-verification" content="gE0-HD8J53xztoLRmmDCBo4ccLlpgUjSN2aQw7z8jKM" />
     <meta name="naver-site-verification" content="64ed0e5eae936859bc0da6cdb51688f76c54bb01" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4802312161852466" crossorigin="anonymous"></script>
@@ -202,7 +201,8 @@
 
     <!-- 3번: 주휴수당 -->
     <div id="calc3" class="calculator-content">
-        <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="text" id="hourlyWage" value="10,030" oninput="formatInputNumber(this)"></div>
+        <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="text" id="hourlyWage" value="10,030" oninput="formatInputNumber(this, 'wageUnit')"></div>
+        <div class="korean-unit" id="wageUnit">1만 원</div>
         <div class="form-group"><label for="weeklyHours">일주일 총 근로시간 (시간)</label><input type="number" id="weeklyHours" value="40"></div>
         <button class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
         <div class="result-box" id="resultBox3">
@@ -273,22 +273,17 @@
 </div>
 
 <script>
-    // 탭 전환 함수
     function switchTab(tabNumber) {
-        // 모든 탭 버튼 비활성화
         const buttons = document.querySelectorAll('.tab-btn');
         buttons.forEach(btn => btn.classList.remove('active'));
 
-        // 모든 컨텐츠 숨기기
         const contents = document.querySelectorAll('.calculator-content');
         contents.forEach(content => content.classList.remove('active'));
 
-        // 선택한 탭과 컨텐츠 활성화
         buttons[tabNumber - 1].classList.add('active');
         document.getElementById('calc' + tabNumber).classList.add('active');
     }
 
-    // 숫자 콤마 및 한글 단위 변환 함수
     function formatInputNumber(input, unitId) {
         let value = input.value.replace(/[^0-9]/g, '');
         if (value) {
@@ -306,11 +301,11 @@
 
     function getKoreanUnit(num) {
         if (num === 0) return '0 원';
-        const억 = Math.floor(num / 100000000);
-        const만 = Math.floor((num % 100000000) / 10000);
+        const 억 = Math.floor(num / 100000000);
+        const 만 = Math.floor((num % 100000000) / 10000);
         let result = '';
         if (억 > 0) result += 억 + '억 ';
-        if (만 > 0) result +=만.toLocaleString() + '만 ';
+        if (만 > 0) result += 만.toLocaleString() + '만 ';
         return result.trim() + ' 원';
     }
 
@@ -319,7 +314,6 @@
         return val ? Number(val) : 0;
     }
 
-    // 1. 전월세 전환 계산
     function calcRent() {
         const jeonse = getCleanNumber('jeonseDeposit');
         const monthlyDep = getCleanNumber('monthlyDeposit');
@@ -339,7 +333,6 @@
         document.getElementById('resultBox1').style.display = 'block';
     }
 
-    // 2. 연말정산 간이 계산
     function calcTax() {
         const salary = getCleanNumber('salary');
         const card = getCleanNumber('cardSpent');
@@ -357,7 +350,6 @@
         document.getElementById('resultBox2').style.display = 'block';
     }
 
-    // 3. 주휴수당 계산
     function calcSalary() {
         const wage = getCleanNumber('hourlyWage');
         const hours = parseFloat(document.getElementById('weeklyHours').value) || 0;
@@ -378,13 +370,12 @@
         document.getElementById('resultBox3').style.display = 'block';
     }
 
-    // 4. 세전/세후 월급 계산
     function calcNetSalary() {
         const preTax = getCleanNumber('preTaxSalary');
         const nationalPension = preTax * 0.045;
         const healthInsurance = preTax * 0.03545;
         const employmentInsurance = preTax * 0.009;
-        const incomeTax = preTax * 0.03; // 간이 세액 추정
+        const incomeTax = preTax * 0.03;
 
         const totalTax = Math.round(nationalPension + healthInsurance + employmentInsurance + incomeTax);
         const netPay = preTax - totalTax;
@@ -394,12 +385,11 @@
         document.getElementById('resultBox4').style.display = 'block';
     }
 
-    // 5. 퇴직금 계산
     function calcRetirement() {
         const threeMonthsPay = getCleanNumber('retireMonthsPay');
         const workingDays = Number(document.getElementById('totalWorkingYears').value) || 0;
 
-        const avgDailyWage = threeMonthsPay / 90; // 최근 3개월 일수 90일 기준 추정
+        const avgDailyWage = threeMonthsPay / 90;
         const retirementPay = Math.round(avgDailyWage * 30 * (workingDays / 365));
 
         document.getElementById('resAvgWage').innerText = Math.round(avgDailyWage).toLocaleString() + ' 원';
@@ -407,18 +397,16 @@
         document.getElementById('resultBox5').style.display = 'block';
     }
 
-    // 6. 실업급여 계산
     function calcUnemployment() {
         const monthPay = getCleanNumber('unemploymentMonthPay');
         const dailyWage = monthPay / 30;
         let dailyUnemp = Math.round(dailyWage * 0.6);
 
-        // 상/하한액 적용 (하한액 약 66,000원 기준)
         if (dailyUnemp < 66000) dailyUnemp = 66000;
         if (dailyUnemp > 66131) dailyUnemp = 66131;
 
         const period = document.getElementById('employmentPeriod').value;
-        let days = 150; // 기본 3년 미만
+        let days = 150;
         if (period === '3') days = 180;
         else if (period === '5') days = 210;
         else if (period === '10') days = 240;
@@ -431,7 +419,6 @@
         document.getElementById('resultBox6').style.display = 'block';
     }
 
-    // 7. 만나이 계산
     function calcAge() {
         const birthVal = document.getElementById('birthDate').value;
         if (!birthVal) {
