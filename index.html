@@ -89,7 +89,7 @@
             margin-bottom: 5px;
             font-size: 13px;
         }
-        input {
+        input, select {
             width: 100%;
             padding: 10px;
             border: 1px solid var(--border-color);
@@ -97,8 +97,9 @@
             font-size: 15px;
             outline: none;
             transition: border-color 0.2s;
+            background: #fff;
         }
-        input:focus {
+        input:focus, select:focus {
             border-color: var(--primary-color);
         }
         .calc-btn {
@@ -213,22 +214,4 @@
 
     <!-- 4번: 세전세후 월급 -->
     <div id="calc4" class="calculator-content">
-        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="text" id="preTaxSalary" value="3,000,000" oninput="formatInputNumber(this, 'preTaxUnit')"></div>
-        <div class="korean-unit" id="preTaxUnit">300만 원</div>
-        <button class="calc-btn" onclick="calcNetSalary()">세후 실수령액 계산하기</button>
-        <div class="result-box" id="resultBox4">
-            <h3>월급 실수령액 추정 결과</h3>
-            <div class="result-item"><span>4대보험 및 세금 총공제:</span><span class="result-value" id="resTotalTax">0 원</span></div>
-            <div class="result-item"><span>예상 월 실수령액:</span><span class="result-value highlight" id="resNetPay">0 원</span></div>
-        </div>
-    </div>
-
-    <!-- 5번: 퇴직금 계산기 -->
-    <div id="calc5" class="calculator-content">
-        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="text" id="retireMonthsPay" value="9,000,000" oninput="formatInputNumber(this, 'retireUnit')"></div>
-        <div class="korean-unit" id="retireUnit">900만 원</div>
-        <div class="form-group"><label for="totalWorkingYears">총 재직 일수</label><input type="number" id="totalWorkingYears" value="1095"></div>
-        <button class="calc-btn" onclick="calcRetirement()">예상 퇴직금 계산하기</button>
-        <div class="result-box" id="resultBox5">
-            <h3>예상 퇴직금 결과</h3>
-            <div class="result-item"><span>1일 평균임금 (추정):</span><span class="result-value" id="resAvg
+        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="text" id="preTaxSalary" value="3,000,000" on
