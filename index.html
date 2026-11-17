@@ -8,6 +8,11 @@
     <meta property="og:title" content="전월세 전환율 및 적정 월세 계산기">
     <meta property="og:description" content="내 월세가 법정 기준을 초과했는지 1초 만에 확인해 보세요.">
     <meta property="og:type" content="website">
+    
+    <!-- 구글 & 네이버 서치콘솔 소유권 확인 태그 -->
+    <meta name="google-site-verification" content="gE0-HD8J53xztoLRmmDCBo4ccLlpgUjSN2aQw7z8jKM" />
+    <meta name="naver-site-verification" content="64ed0e5eae936859bc0da6cdb51688f76c54bb01" />
+
     <style>
         :root {
             --primary-color: #2563eb;
@@ -180,7 +185,7 @@
         
         <h3 style="margin-top: 15px;">📌 자주 묻는 질문 (FAQ)</h3>
         <ul>
-            <li><strong>Q. 법정 전월세 전환율 상한선은 어떻게 되나요?</strong><br>기준금리에 대통령령으로 정하는 이율(현재 2%)을 더한 비율로 산정됩니다. 보통 연 5~6% 선에서 움직입니다.</li>
+            <li><strong>Q. 법정 전월세 전환율 상한선은 어떻게 되나요?</strong><br>기준금리에 대통령령으로 정하는 이율(현재 2%)을 더한 비율로 산정됩니다. 연 5~6% 선에서 움직입니다.</li>
             <li><strong>Q. 집주인이 법정 전환율보다 높은 월세를 요구하면 어떻게 하나요?</strong><br>법정 상한선을 초과하여 받은 월세는 초과 반환을 청구할 수 있는 법적 효력이 있습니다. 계약 전 반드시 적정 월세를 확인하세요.</li>
         </ul>
     </div>
@@ -188,7 +193,7 @@
 
 <script>
     function calculateRent() {
-        const oldDeposit = Number(document.getElementById('oldDeposit').value) * 10000; // 원 단위 변환
+        const oldDeposit = Number(document.getElementById('oldDeposit').value) * 10000;
         const newDeposit = Number(document.getElementById('newDeposit').value) * 10000;
         const rate = Number(document.getElementById('interestRate').value) / 100;
 
@@ -197,7 +202,6 @@
             return;
         }
 
-        // 보증금 줄어든 금액 (월세로 전환되는 금액)
         const diffDeposit = oldDeposit - newDeposit;
         
         if (diffDeposit <= 0) {
@@ -205,12 +209,9 @@
             return;
         }
 
-        // 연간 적정 월세 = 보증금 차액 * 전환율
         const yearRent = diffDeposit * rate;
-        // 월 적정 월세
         const monthRent = Math.round(yearRent / 12);
 
-        // 결과 화면 표시
         document.getElementById('resDiffDeposit').innerText = (diffDeposit).toLocaleString() + ' 원';
         document.getElementById('resYearRent').innerText = Math.round(yearRent).toLocaleString() + ' 원';
         document.getElementById('resMonthRent').innerText = monthRent.toLocaleString() + ' 원';
