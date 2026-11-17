@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>종합 생활 금융 계산기 모음 (연말정산·주휴수당·실수령액·퇴직금 등)</title>
-    <meta name="description" content="연말정산, 주휴수당, 세전세후 월급, 퇴직금, 실업급여, 만나이까지 한 번에 계산하는 종합 금융 유틸리티 도구입니다.">
+    <title>종합 생활 금융 계산기 모음 (전월세·연말정산·주휴수당 등)</title>
+    <meta name="description" content="전월세 전환율, 연말정산, 주휴수당, 세전세후 월급, 퇴직금, 실업급여, 만나이까지 한 번에 계산하는 종합 금융 유틸리티 도구입니다.">
     
     <!-- 구글 애드센스 및 검색 등록용 태그 -->
     <meta name="google-site-verification" content="gE0-HD8J53xztoLRmmDCBo4ccLlpgUjSN2aQw7z8jKM" />
@@ -52,7 +52,7 @@
             color: #64748b;
             margin-bottom: 18px;
         }
-        /* 탭 메뉴 스타일 (2줄 그리드 배치) */
+        /* 탭 메뉴 스타일 (7개 대응 그리드) */
         .tab-menu {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -153,81 +153,95 @@
     <h1>종합 생활 금융 계산기</h1>
     <p class="subtitle">필요한 생활 금융 계산을 한곳에서 간편하게 이용하세요</p>
 
-    <!-- 탭 메뉴 (6개) -->
+    <!-- 탭 메뉴 (7개) -->
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="switchTab(1)">연말정산</button>
-        <button class="tab-btn" onclick="switchTab(2)">주휴수당·알바</button>
-        <button class="tab-btn" onclick="switchTab(3)">세전·세후월급</button>
-        <button class="tab-btn" onclick="switchTab(4)">퇴직금 계산</button>
-        <button class="tab-btn" onclick="switchTab(5)">실업급여 계산</button>
-        <button class="tab-btn" onclick="switchTab(6)">만나이·디데이</button>
+        <button class="tab-btn active" onclick="switchTab(1)">전월세 전환율</button>
+        <button class="tab-btn" onclick="switchTab(2)">연말정산</button>
+        <button class="tab-btn" onclick="switchTab(3)">주휴수당·알바</button>
+        <button class="tab-btn" onclick="switchTab(4)">세전·세후월급</button>
+        <button class="tab-btn" onclick="switchTab(5)">퇴직금 계산</button>
+        <button class="tab-btn" onclick="switchTab(6)">실업급여 계산</button>
+        <button class="tab-btn" onclick="switchTab(7)" style="grid-column: span 3;">만나이·디데이</button>
     </div>
 
-    <!-- 1번: 연말정산 -->
+    <!-- 1번: 전월세 전환율 계산기 -->
     <div id="calc1" class="calculator-content active">
+        <div class="form-group"><label for="jeonseDeposit">기존 전세 보증금 (원)</label><input type="number" id="jeonseDeposit" value="300000000"></div>
+        <div class="form-group"><label for="monthlyDeposit">변경할 보증금 (원)</label><input type="number" id="monthlyDeposit" value="50000000"></div>
+        <div class="form-group"><label for="interestRate">전월세 전환율 (%)</label><input type="number" id="interestRate" step="0.1" value="5.5"></div>
+        <button class="calc-btn" onclick="calcRent()">월세 계산하기</button>
+        <div class="result-box" id="resultBox1">
+            <h3>전월세 전환 계산 결과</h3>
+            <div class="result-item"><span>보증금 차액:</span><span class="result-value" id="resDiffDeposit">0 원</span></div>
+            <div class="result-item"><span>예상 월세 (월):</span><span class="result-value highlight" id="resMonthlyRent">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 2번: 연말정산 -->
+    <div id="calc2" class="calculator-content">
         <div class="form-group"><label for="salary">연간 총급여액 (원)</label><input type="number" id="salary" value="40000000"></div>
         <div class="form-group"><label for="cardSpent">신용·체크카드 총 사용액 (원)</label><input type="number" id="cardSpent" value="15000000"></div>
         <button class="calc-btn" onclick="calcTax()">예상 환급금 계산하기</button>
-        <div class="result-box" id="resultBox1">
+        <div class="result-box" id="resultBox2">
             <h3>연말정산 간이 계산 결과</h3>
             <div class="result-item"><span>소득공제 예상액:</span><span class="result-value" id="resDeduction">0 원</span></div>
             <div class="result-item"><span>예상 환급액:</span><span class="result-value highlight" id="resRefund">0 원</span></div>
         </div>
     </div>
 
-    <!-- 2번: 주휴수당 -->
-    <div id="calc2" class="calculator-content">
+    <!-- 3번: 주휴수당 -->
+    <div id="calc3" class="calculator-content">
         <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="number" id="hourlyWage" value="10030"></div>
         <div class="form-group"><label for="weeklyHours">일주일 총 근로시간 (시간)</label><input type="number" id="weeklyHours" value="40"></div>
         <button class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
-        <div class="result-box" id="resultBox2">
+        <div class="result-box" id="resultBox3">
             <h3>알바·급여 계산 결과</h3>
             <div class="result-item"><span>주휴수당 여부:</span><span class="result-value" id="resHolidayPayStatus">대상</span></div>
             <div class="result-item"><span>예상 월 실수령 환산:</span><span class="result-value highlight" id="resTotalMonthPay">0 원</span></div>
         </div>
     </div>
 
-    <!-- 3번: 세전세후 월급 -->
-    <div id="calc3" class="calculator-content">
+    <!-- 4번: 세전세후 월급 -->
+    <div id="calc4" class="calculator-content">
         <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="number" id="preTaxSalary" value="3000000"></div>
         <button class="calc-btn" onclick="calcNetSalary()">세후 실수령액 계산하기</button>
-        <div class="result-box" id="resultBox3">
+        <div class="result-box" id="resultBox4">
             <h3>월급 실수령액 추정 결과</h3>
             <div class="result-item"><span>4대보험 및 세금 총공제:</span><span class="result-value" id="resTotalTax">0 원</span></div>
             <div class="result-item"><span>예상 월 실수령액:</span><span class="result-value highlight" id="resNetPay">0 원</span></div>
         </div>
     </div>
 
-    <!-- 4번: 퇴직금 계산기 -->
-    <div id="calc4" class="calculator-content">
-        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="number" id="retireMonthsPay" placeholder="예: 9000000" value="9000000"></div>
-        <div class="form-group"><label for="totalWorkingYears">총 재직 일수 (또는 근무년수 환산일)</label><input type="number" id="totalWorkingYears" placeholder="예: 1095 (3년)" value="1095"></div>
+    <!-- 5번: 퇴직금 계산기 -->
+    <div id="calc5" class="calculator-content">
+        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="number" id="retireMonthsPay" value="9000000"></div>
+        <div class="form-group"><label for="totalWorkingYears">총 재직 일수</label><input type="number" id="totalWorkingYears" value="1095"></div>
         <button class="calc-btn" onclick="calcRetirement()">예상 퇴직금 계산하기</button>
-        <div class="result-box" id="resultBox4">
+        <div class="result-box" id="resultBox5">
             <h3>예상 퇴직금 결과</h3>
             <div class="result-item"><span>1일 평균임금 (추정):</span><span class="result-value" id="resAvgDailyWage">0 원</span></div>
             <div class="result-item"><span>예상 퇴직금 (세전):</span><span class="result-value highlight" id="resRetireMoney">0 원</span></div>
         </div>
     </div>
 
-    <!-- 5번: 실업급여 계산기 -->
-    <div id="calc5" class="calculator-content">
+    <!-- 6번: 실업급여 계산기 -->
+    <div id="calc6" class="calculator-content">
         <div class="form-group"><label for="unemploymentMonthly">퇴직 전 월 평균 급여 (세전, 원)</label><input type="number" id="unemploymentMonthly" value="3000000"></div>
         <div class="form-group"><label for="workingMonths">고용보험 가입 기간 (개월)</label><input type="number" id="workingMonths" value="36"></div>
         <button class="calc-btn" onclick="calcUnemployment()">예상 실업급여 계산하기</button>
-        <div class="result-box" id="resultBox5">
+        <div class="result-box" id="resultBox6">
             <h3>예상 실업급여 결과</h3>
             <div class="result-item"><span>1일 상한액 기준 수급액:</span><span class="result-value" id="resDailyUnemp">0 원</span></div>
             <div class="result-item"><span>예상 총 수급액 (추정):</span><span class="result-value highlight" id="resTotalUnemp">0 원</span></div>
         </div>
     </div>
 
-    <!-- 6번: 만나이 및 디데이 -->
-    <div id="calc6" class="calculator-content">
+    <!-- 7번: 만나이 및 디데이 -->
+    <div id="calc7" class="calculator-content">
         <div class="form-group"><label for="birthDate">생년월일</label><input type="date" id="birthDate" value="1995-01-01"></div>
         <div class="form-group"><label for="targetDate">디데이 목표일</label><input type="date" id="targetDate" value="2027-02-14"></div>
         <button class="calc-btn" onclick="calcAgeAndDday()">만나이 및 D-Day 계산하기</button>
-        <div class="result-box" id="resultBox6">
+        <div class="result-box" id="resultBox7">
             <h3>나이 및 디데이 결과</h3>
             <div class="result-item"><span>현재 만 나이:</span><span class="result-value" id="resManAge">0 세</span></div>
             <div class="result-item"><span>목표일까지 남은 날짜:</span><span class="result-value highlight" id="resDday">D-0</span></div>
@@ -243,6 +257,18 @@
         document.getElementById('calc' + tabNum).classList.add('active');
     }
 
+    function calcRent() {
+        const jeonse = Number(document.getElementById('jeonseDeposit').value);
+        const monthlyDep = Number(document.getElementById('monthlyDeposit').value);
+        const rate = Number(document.getElementById('interestRate').value);
+        const diff = jeonse - monthlyDep;
+        const annualRent = diff * (rate / 100);
+        const monthlyRent = Math.round(annualRent / 12);
+        document.getElementById('resDiffDeposit').innerText = diff.toLocaleString() + ' 원';
+        document.getElementById('resMonthlyRent').innerText = monthlyRent.toLocaleString() + ' 원';
+        document.getElementById('resultBox1').style.display = 'block';
+    }
+
     function calcTax() {
         const salary = Number(document.getElementById('salary').value);
         const cardSpent = Number(document.getElementById('cardSpent').value);
@@ -251,7 +277,7 @@
         const estimatedRefund = Math.round(deduction * 0.15);
         document.getElementById('resDeduction').innerText = Math.round(deduction).toLocaleString() + ' 원';
         document.getElementById('resRefund').innerText = '약 ' + estimatedRefund.toLocaleString() + ' 원 환급 예상';
-        document.getElementById('resultBox1').style.display = 'block';
+        document.getElementById('resultBox2').style.display = 'block';
     }
 
     function calcSalary() {
@@ -262,7 +288,7 @@
         let monthlyPay = Math.round(((weeklyHours + weeklyHolidayHours) * wage) * 4.345);
         document.getElementById('resHolidayPayStatus').innerText = isHolidayEligible ? '지급 대상 (주 15시간 이상)' : '대상 아님';
         document.getElementById('resTotalMonthPay').innerText = monthlyPay.toLocaleString() + ' 원';
-        document.getElementById('resultBox2').style.display = 'block';
+        document.getElementById('resultBox3').style.display = 'block';
     }
 
     function calcNetSalary() {
@@ -271,7 +297,7 @@
         const netPay = preTax - deduction;
         document.getElementById('resTotalTax').innerText = deduction.toLocaleString() + ' 원';
         document.getElementById('resNetPay').innerText = netPay.toLocaleString() + ' 원';
-        document.getElementById('resultBox3').style.display = 'block';
+        document.getElementById('resultBox4').style.display = 'block';
     }
 
     function calcRetirement() {
@@ -281,7 +307,7 @@
         const retirementMoney = (avgDailyWage * 30) * (days / 365);
         document.getElementById('resAvgDailyWage').innerText = Math.round(avgDailyWage).toLocaleString() + ' 원';
         document.getElementById('resRetireMoney').innerText = Math.round(retirementMoney).toLocaleString() + ' 원';
-        document.getElementById('resultBox4').style.display = 'block';
+        document.getElementById('resultBox5').style.display = 'block';
     }
 
     function calcUnemployment() {
@@ -292,7 +318,7 @@
         const totalUnemp = dailyBase * 150;
         document.getElementById('resDailyUnemp').innerText = '약 ' + Math.round(dailyBase).toLocaleString() + ' 원/일';
         document.getElementById('resTotalUnemp').innerText = '약 ' + Math.round(totalUnemp).toLocaleString() + ' 원';
-        document.getElementById('resultBox5').style.display = 'block';
+        document.getElementById('resultBox6').style.display = 'block';
     }
 
     function calcAgeAndDday() {
@@ -309,7 +335,7 @@
 
         document.getElementById('resManAge').innerText = age + ' 세';
         document.getElementById('resDday').innerText = diffDays >= 0 ? 'D-' + diffDays : 'D+' + Math.abs(diffDays);
-        document.getElementById('resultBox6').style.display = 'block';
+        document.getElementById('resultBox7').style.display = 'block';
     }
 </script>
 
