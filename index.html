@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전월세 전환율 및 적정 월세 계산기 | 2026 최신 법정 기준</title>
+    <meta name="description" content="전세를 월세로 바꿀 때 법정 상한선 기준에 맞는 적정 월세인지 확인하고 초과 여부를 즉시 계산해 보세요.">
+    <meta property="og:title" content="전월세 전환율 및 적정 월세 계산기">
+    <meta property="og:description" content="내 월세가 법정 기준을 초과했는지 1초 만에 확인해 보세요.">
+    <meta property="og:type" content="website">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --border-color: #cbd5e1;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 8px;
+            color: #0f172a;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 14px;
+            color: #64748b;
+            margin-bottom: 24px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        input:focus {
+            border-color: var(--primary-color);
+        }
+        button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+        .result-box {
+            margin-top: 25px;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            display: none;
+        }
+        .result-box h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+        .result-value {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .highlight {
+            color: #dc2626;
+        }
+        .info-section {
+            margin-top: 40px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 20px;
+        }
+        .info-section h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+            color: #334155;
+        }
+        .info-section p, .info-section li {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 8px;
+        }
+        .info-section ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>전월세 전환율 계산기</h1>
+    <p class="subtitle">법정 기준에 맞는 적정 월세인지 쉽고 빠르게 확인하세요</p>
+
+    <div class="form-group">
+        <label for="oldDeposit">기존 전세보증금 (또는 변경 전 보증금)</label>
+        <input type="number" id="oldDeposit" placeholder="예: 20000 (단위: 만원)" value="20000">
+    </div>
+
+    <div class="form-group">
+        <label for="newDeposit">변경 후 보증금</label>
+        <input type="number" id="newDeposit" placeholder="예: 5000 (단위: 만원)" value="5000">
+    </div>
+
+    <div class="form-group">
+        <label for="interestRate">전월세 전환율 (%)</label>
+        <input type="number" id="interestRate" step="0.1" placeholder="기준금리 + 2% (보통 5.5~6.5%)" value="5.5">
+        <small style="color: #64748b; font-size: 12px; margin-top: 4px; display: block;">* 주택임대차보호법상 법정 상한선 또는 한국은행 기준금리 연동 비율을 입력하세요.</small>
+    </div>
+
+    <button onclick="calculateRent()">적정 월세 계산하기</button>
+
+    <div class="result-box" id="resultBox">
+        <h2>계산 결과</h2>
+        <div class="result-item">
+            <span>보증금 차액:</span>
+            <span class="result-value" id="resDiffDeposit">0 원</span>
+        </div>
+        <div class="result-item">
+            <span>법정 연간 적정 월세액:</span>
+            <span class="result-value" id="resYearRent">0 원</span>
+        </div>
+        <div class="result-item">
+            <span>법정 월 적정 월세 상한선:</span>
+            <span class="result-value highlight" id="resMonthRent">0 원</span>
+        </div>
+        <p id="resDescription" style="margin-top: 12px; font-size: 13px; color: #475569;"></p>
+    </div>
+
+    <div class="info-section">
+        <h3>💡 전월세 전환율이란?</h3>
+        <p>전세 보증금의 일부를 월세로 전환할 때 적용하는 이율을 의미합니다. 주택임대차보호법에 따라 집주인이 임의로 높은 이율을 적용할 수 없도록 법정 상한선이 정해져 있습니다.</p>
+        
+        <h3 style="margin-top: 15px;">📌 자주 묻는 질문 (FAQ)</h3>
+        <ul>
+            <li><strong>Q. 법정 전월세 전환율 상한선은 어떻게 되나요?</strong><br>기준금리에 대통령령으로 정하는 이율(현재 2%)을 더한 비율로 산정됩니다. 보통 연 5~6% 선에서 움직입니다.</li>
+            <li><strong>Q. 집주인이 법정 전환율보다 높은 월세를 요구하면 어떻게 하나요?</strong><br>법정 상한선을 초과하여 받은 월세는 초과 반환을 청구할 수 있는 법적 효력이 있습니다. 계약 전 반드시 적정 월세를 확인하세요.</li>
+        </ul>
+    </div>
+</div>
+
+<script>
+    function calculateRent() {
+        const oldDeposit = Number(document.getElementById('oldDeposit').value) * 10000; // 원 단위 변환
+        const newDeposit = Number(document.getElementById('newDeposit').value) * 10000;
+        const rate = Number(document.getElementById('interestRate').value) / 100;
+
+        if (isNaN(oldDeposit) || isNaN(newDeposit) || isNaN(rate)) {
+            alert('올바른 숫자를 입력해주세요.');
+            return;
+        }
+
+        // 보증금 줄어든 금액 (월세로 전환되는 금액)
+        const diffDeposit = oldDeposit - newDeposit;
+        
+        if (diffDeposit <= 0) {
+            alert('변경 후 보증금은 기존 보증금보다 작아야 합니다.');
+            return;
+        }
+
+        // 연간 적정 월세 = 보증금 차액 * 전환율
+        const yearRent = diffDeposit * rate;
+        // 월 적정 월세
+        const monthRent = Math.round(yearRent / 12);
+
+        // 결과 화면 표시
+        document.getElementById('resDiffDeposit').innerText = (diffDeposit).toLocaleString() + ' 원';
+        document.getElementById('resYearRent').innerText = Math.round(yearRent).toLocaleString() + ' 원';
+        document.getElementById('resMonthRent').innerText = monthRent.toLocaleString() + ' 원';
+        
+        document.getElementById('resDescription').innerText = `※ 보증금을 ${(diffDeposit / 10000).toLocaleString()}만 원 낮출 때, 적용 전환율 ${p_to_percent(rate)}% 기준 매달 추가될 수 있는 적정 월세 상한선은 약 ${monthRent.toLocaleString()}원 입니다.`;
+
+        document.getElementById('resultBox').style.display = 'block';
+    }
+
+    function p_to_percent(rate) {
+        return (rate * 100).toFixed(1);
+    }
+</script>
+
+</body>
+</html>
