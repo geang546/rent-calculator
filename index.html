@@ -3,17 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>전월세 전환율 및 적정 월세 계산기 | 2026 최신 법정 기준</title>
-    <meta name="description" content="전세를 월세로 바꿀 때 법정 상한선 기준에 맞는 적정 월세인지 확인하고 초과 여부를 즉시 계산해 보세요.">
-    <meta property="og:title" content="전월세 전환율 및 적정 월세 계산기">
-    <meta property="og:description" content="내 월세가 법정 기준을 초과했는지 1초 만에 확인해 보세요.">
-    <meta property="og:type" content="website">
+    <title>종합 생활 금융 계산기 모음 (연말정산·주휴수당·실수령액·퇴직금 등)</title>
+    <meta name="description" content="연말정산, 주휴수당, 세전세후 월급, 퇴직금, 실업급여, 만나이까지 한 번에 계산하는 종합 금융 유틸리티 도구입니다.">
     
-    <!-- 구글 & 네이버 서치콘솔 소유권 확인 태그 -->
+    <!-- 구글 애드센스 및 검색 등록용 태그 -->
     <meta name="google-site-verification" content="gE0-HD8J53xztoLRmmDCBo4ccLlpgUjSN2aQw7z8jKM" />
     <meta name="naver-site-verification" content="64ed0e5eae936859bc0da6cdb51688f76c54bb01" />
-
-    <!-- 구글 애드센스 연동 스크립트 -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4802312161852466" crossorigin="anonymous"></script>
 
     <style>
@@ -38,81 +33,110 @@
             padding: 20px;
         }
         .container {
-            max-width: 600px;
+            max-width: 620px;
             margin: 0 auto;
             background: var(--card-bg);
-            padding: 30px;
+            padding: 25px;
             border-radius: 16px;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
         h1 {
-            font-size: 24px;
+            font-size: 20px;
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             color: #0f172a;
         }
         .subtitle {
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
             color: #64748b;
-            margin-bottom: 24px;
+            margin-bottom: 18px;
+        }
+        /* 탭 메뉴 스타일 (2줄 그리드 배치) */
+        .tab-menu {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 22px;
+        }
+        .tab-btn {
+            padding: 9px 4px;
+            background: #e2e8f0;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #475569;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+        .calculator-content {
+            display: none;
+        }
+        .calculator-content.active {
+            display: block;
         }
         .form-group {
-            margin-bottom: 18px;
+            margin-bottom: 14px;
         }
         label {
             display: block;
             font-weight: 600;
-            margin-bottom: 6px;
-            font-size: 14px;
+            margin-bottom: 5px;
+            font-size: 13px;
         }
         input {
             width: 100%;
-            padding: 12px;
+            padding: 10px;
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 15px;
             outline: none;
             transition: border-color 0.2s;
         }
         input:focus {
             border-color: var(--primary-color);
         }
-        button {
+        .calc-btn {
             width: 100%;
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 14px;
-            font-size: 16px;
+            padding: 12px;
+            font-size: 15px;
             font-weight: bold;
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.2s;
-            margin-top: 10px;
+            margin-top: 6px;
         }
-        button:hover {
+        .calc-btn:hover {
             background-color: var(--primary-hover);
         }
         .result-box {
-            margin-top: 25px;
+            margin-top: 18px;
             background: #f1f5f9;
-            padding: 20px;
+            padding: 16px;
             border-radius: 12px;
             display: none;
         }
-        .result-box h2 {
-            font-size: 18px;
-            margin-bottom: 12px;
+        .result-box h3 {
+            font-size: 14px;
+            margin-bottom: 8px;
             color: #1e293b;
             border-bottom: 2px solid #e2e8f0;
-            padding-bottom: 8px;
+            padding-bottom: 5px;
         }
         .result-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 15px;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
         .result-value {
             font-weight: bold;
@@ -121,111 +145,171 @@
         .highlight {
             color: #dc2626;
         }
-        .info-section {
-            margin-top: 40px;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 20px;
-        }
-        .info-section h3 {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #334155;
-        }
-        .info-section p, .info-section li {
-            font-size: 14px;
-            color: #475569;
-            margin-bottom: 8px;
-        }
-        .info-section ul {
-            padding-left: 20px;
-        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>전월세 전환율 계산기</h1>
-    <p class="subtitle">법정 기준에 맞는 적정 월세인지 쉽고 빠르게 확인하세요</p>
+    <h1>종합 생활 금융 계산기</h1>
+    <p class="subtitle">필요한 생활 금융 계산을 한곳에서 간편하게 이용하세요</p>
 
-    <div class="form-group">
-        <label for="oldDeposit">기존 전세보증금 (또는 변경 전 보증금)</label>
-        <input type="number" id="oldDeposit" placeholder="예: 20000 (단위: 만원)" value="20000">
+    <!-- 탭 메뉴 (6개) -->
+    <div class="tab-menu">
+        <button class="tab-btn active" onclick="switchTab(1)">연말정산</button>
+        <button class="tab-btn" onclick="switchTab(2)">주휴수당·알바</button>
+        <button class="tab-btn" onclick="switchTab(3)">세전·세후월급</button>
+        <button class="tab-btn" onclick="switchTab(4)">퇴직금 계산</button>
+        <button class="tab-btn" onclick="switchTab(5)">실업급여 계산</button>
+        <button class="tab-btn" onclick="switchTab(6)">만나이·디데이</button>
     </div>
 
-    <div class="form-group">
-        <label for="newDeposit">변경 후 보증금</label>
-        <input type="number" id="newDeposit" placeholder="예: 5000 (단위: 만원)" value="5000">
-    </div>
-
-    <div class="form-group">
-        <label for="interestRate">전월세 전환율 (%)</label>
-        <input type="number" id="interestRate" step="0.1" placeholder="기준금리 + 2% (보통 5.5~6.5%)" value="5.5">
-        <small style="color: #64748b; font-size: 12px; margin-top: 4px; display: block;">* 주택임대차보호법상 법정 상한선 또는 한국은행 기준금리 연동 비율을 입력하세요.</small>
-    </div>
-
-    <button onclick="calculateRent()">적정 월세 계산하기</button>
-
-    <div class="result-box" id="resultBox">
-        <h2>계산 결과</h2>
-        <div class="result-item">
-            <span>보증금 차액:</span>
-            <span class="result-value" id="resDiffDeposit">0 원</span>
+    <!-- 1번: 연말정산 -->
+    <div id="calc1" class="calculator-content active">
+        <div class="form-group"><label for="salary">연간 총급여액 (원)</label><input type="number" id="salary" value="40000000"></div>
+        <div class="form-group"><label for="cardSpent">신용·체크카드 총 사용액 (원)</label><input type="number" id="cardSpent" value="15000000"></div>
+        <button class="calc-btn" onclick="calcTax()">예상 환급금 계산하기</button>
+        <div class="result-box" id="resultBox1">
+            <h3>연말정산 간이 계산 결과</h3>
+            <div class="result-item"><span>소득공제 예상액:</span><span class="result-value" id="resDeduction">0 원</span></div>
+            <div class="result-item"><span>예상 환급액:</span><span class="result-value highlight" id="resRefund">0 원</span></div>
         </div>
-        <div class="result-item">
-            <span>법정 연간 적정 월세액:</span>
-            <span class="result-value" id="resYearRent">0 원</span>
-        </div>
-        <div class="result-item">
-            <span>법정 월 적정 월세 상한선:</span>
-            <span class="result-value highlight" id="resMonthRent">0 원</span>
-        </div>
-        <p id="resDescription" style="margin-top: 12px; font-size: 13px; color: #475569;"></p>
     </div>
 
-    <div class="info-section">
-        <h3>💡 전월세 전환율이란?</h3>
-        <p>전세 보증금의 일부를 월세로 전환할 때 적용하는 이율을 의미합니다. 주택임대차보호법에 따라 집주인이 임의로 높은 이율을 적용할 수 없도록 법정 상한선이 정해져 있습니다.</p>
-        
-        <h3 style="margin-top: 15px;">📌 자주 묻는 질문 (FAQ)</h3>
-        <ul>
-            <li><strong>Q. 법정 전월세 전환율 상한선은 어떻게 되나요?</strong><br>기준금리에 대통령령으로 정하는 이율(현재 2%)을 더한 비율로 산정됩니다. 연 5~6% 선에서 움직입니다.</li>
-            <li><strong>Q. 집주인이 법정 전환율보다 높은 월세를 요구하면 어떻게 하나요?</strong><br>법정 상한선을 초과하여 받은 월세는 초과 반환을 청구할 수 있는 법적 효력이 있습니다. 계약 전 반드시 적정 월세를 확인하세요.</li>
-        </ul>
+    <!-- 2번: 주휴수당 -->
+    <div id="calc2" class="calculator-content">
+        <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="number" id="hourlyWage" value="10030"></div>
+        <div class="form-group"><label for="weeklyHours">일주일 총 근로시간 (시간)</label><input type="number" id="weeklyHours" value="40"></div>
+        <button class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
+        <div class="result-box" id="resultBox2">
+            <h3>알바·급여 계산 결과</h3>
+            <div class="result-item"><span>주휴수당 여부:</span><span class="result-value" id="resHolidayPayStatus">대상</span></div>
+            <div class="result-item"><span>예상 월 실수령 환산:</span><span class="result-value highlight" id="resTotalMonthPay">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 3번: 세전세후 월급 -->
+    <div id="calc3" class="calculator-content">
+        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="number" id="preTaxSalary" value="3000000"></div>
+        <button class="calc-btn" onclick="calcNetSalary()">세후 실수령액 계산하기</button>
+        <div class="result-box" id="resultBox3">
+            <h3>월급 실수령액 추정 결과</h3>
+            <div class="result-item"><span>4대보험 및 세금 총공제:</span><span class="result-value" id="resTotalTax">0 원</span></div>
+            <div class="result-item"><span>예상 월 실수령액:</span><span class="result-value highlight" id="resNetPay">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 4번: 퇴직금 계산기 -->
+    <div id="calc4" class="calculator-content">
+        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="number" id="retireMonthsPay" placeholder="예: 9000000" value="9000000"></div>
+        <div class="form-group"><label for="totalWorkingYears">총 재직 일수 (또는 근무년수 환산일)</label><input type="number" id="totalWorkingYears" placeholder="예: 1095 (3년)" value="1095"></div>
+        <button class="calc-btn" onclick="calcRetirement()">예상 퇴직금 계산하기</button>
+        <div class="result-box" id="resultBox4">
+            <h3>예상 퇴직금 결과</h3>
+            <div class="result-item"><span>1일 평균임금 (추정):</span><span class="result-value" id="resAvgDailyWage">0 원</span></div>
+            <div class="result-item"><span>예상 퇴직금 (세전):</span><span class="result-value highlight" id="resRetireMoney">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 5번: 실업급여 계산기 -->
+    <div id="calc5" class="calculator-content">
+        <div class="form-group"><label for="unemploymentMonthly">퇴직 전 월 평균 급여 (세전, 원)</label><input type="number" id="unemploymentMonthly" value="3000000"></div>
+        <div class="form-group"><label for="workingMonths">고용보험 가입 기간 (개월)</label><input type="number" id="workingMonths" value="36"></div>
+        <button class="calc-btn" onclick="calcUnemployment()">예상 실업급여 계산하기</button>
+        <div class="result-box" id="resultBox5">
+            <h3>예상 실업급여 결과</h3>
+            <div class="result-item"><span>1일 상한액 기준 수급액:</span><span class="result-value" id="resDailyUnemp">0 원</span></div>
+            <div class="result-item"><span>예상 총 수급액 (추정):</span><span class="result-value highlight" id="resTotalUnemp">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 6번: 만나이 및 디데이 -->
+    <div id="calc6" class="calculator-content">
+        <div class="form-group"><label for="birthDate">생년월일</label><input type="date" id="birthDate" value="1995-01-01"></div>
+        <div class="form-group"><label for="targetDate">디데이 목표일</label><input type="date" id="targetDate" value="2027-02-14"></div>
+        <button class="calc-btn" onclick="calcAgeAndDday()">만나이 및 D-Day 계산하기</button>
+        <div class="result-box" id="resultBox6">
+            <h3>나이 및 디데이 결과</h3>
+            <div class="result-item"><span>현재 만 나이:</span><span class="result-value" id="resManAge">0 세</span></div>
+            <div class="result-item"><span>목표일까지 남은 날짜:</span><span class="result-value highlight" id="resDday">D-0</span></div>
+        </div>
     </div>
 </div>
 
 <script>
-    function calculateRent() {
-        const oldDeposit = Number(document.getElementById('oldDeposit').value) * 10000;
-        const newDeposit = Number(document.getElementById('newDeposit').value) * 10000;
-        const rate = Number(document.getElementById('interestRate').value) / 100;
-
-        if (isNaN(oldDeposit) || isNaN(newDeposit) || isNaN(rate)) {
-            alert('올바른 숫자를 입력해주세요.');
-            return;
-        }
-
-        const diffDeposit = oldDeposit - newDeposit;
-        
-        if (diffDeposit <= 0) {
-            alert('변경 후 보증금은 기존 보증금보다 작아야 합니다.');
-            return;
-        }
-
-        const yearRent = diffDeposit * rate;
-        const monthRent = Math.round(yearRent / 12);
-
-        document.getElementById('resDiffDeposit').innerText = (diffDeposit).toLocaleString() + ' 원';
-        document.getElementById('resYearRent').innerText = Math.round(yearRent).toLocaleString() + ' 원';
-        document.getElementById('resMonthRent').innerText = monthRent.toLocaleString() + ' 원';
-        
-        document.getElementById('resDescription').innerText = `※ 보증금을 ${(diffDeposit / 10000).toLocaleString()}만 원 낮출 때, 적용 전환율 ${p_to_percent(rate)}% 기준 매달 추가될 수 있는 적정 월세 상한선은 약 ${monthRent.toLocaleString()}원 입니다.`;
-
-        document.getElementById('resultBox').style.display = 'block';
+    function switchTab(tabNum) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.calculator-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.tab-btn')[tabNum - 1].classList.add('active');
+        document.getElementById('calc' + tabNum).classList.add('active');
     }
 
-    function p_to_percent(rate) {
-        return (rate * 100).toFixed(1);
+    function calcTax() {
+        const salary = Number(document.getElementById('salary').value);
+        const cardSpent = Number(document.getElementById('cardSpent').value);
+        const threshold = salary * 0.25;
+        let deduction = cardSpent > threshold ? (cardSpent - threshold) * 0.3 : 0;
+        const estimatedRefund = Math.round(deduction * 0.15);
+        document.getElementById('resDeduction').innerText = Math.round(deduction).toLocaleString() + ' 원';
+        document.getElementById('resRefund').innerText = '약 ' + estimatedRefund.toLocaleString() + ' 원 환급 예상';
+        document.getElementById('resultBox1').style.display = 'block';
+    }
+
+    function calcSalary() {
+        const wage = Number(document.getElementById('hourlyWage').value);
+        const weeklyHours = Number(document.getElementById('weeklyHours').value);
+        let isHolidayEligible = weeklyHours >= 15;
+        let weeklyHolidayHours = isHolidayEligible ? (weeklyHours / 40) * 8 : 0;
+        let monthlyPay = Math.round(((weeklyHours + weeklyHolidayHours) * wage) * 4.345);
+        document.getElementById('resHolidayPayStatus').innerText = isHolidayEligible ? '지급 대상 (주 15시간 이상)' : '대상 아님';
+        document.getElementById('resTotalMonthPay').innerText = monthlyPay.toLocaleString() + ' 원';
+        document.getElementById('resultBox2').style.display = 'block';
+    }
+
+    function calcNetSalary() {
+        const preTax = Number(document.getElementById('preTaxSalary').value);
+        const deduction = Math.round(preTax * 0.045 + preTax * 0.0399 + preTax * 0.009 + (preTax > 2000000 ? (preTax - 2000000) * 0.066 + 55000 : 20000));
+        const netPay = preTax - deduction;
+        document.getElementById('resTotalTax').innerText = deduction.toLocaleString() + ' 원';
+        document.getElementById('resNetPay').innerText = netPay.toLocaleString() + ' 원';
+        document.getElementById('resultBox3').style.display = 'block';
+    }
+
+    function calcRetirement() {
+        const monthsPay = Number(document.getElementById('retireMonthsPay').value);
+        const days = Number(document.getElementById('totalWorkingYears').value);
+        const avgDailyWage = monthsPay / 92;
+        const retirementMoney = (avgDailyWage * 30) * (days / 365);
+        document.getElementById('resAvgDailyWage').innerText = Math.round(avgDailyWage).toLocaleString() + ' 원';
+        document.getElementById('resRetireMoney').innerText = Math.round(retirementMoney).toLocaleString() + ' 원';
+        document.getElementById('resultBox4').style.display = 'block';
+    }
+
+    function calcUnemployment() {
+        const monthly = Number(document.getElementById('unemploymentMonthly').value);
+        const months = Number(document.getElementById('workingMonths').value);
+        let dailyBase = (monthly / 30) * 0.6;
+        if(dailyBase > 66000) dailyBase = 66000;
+        const totalUnemp = dailyBase * 150;
+        document.getElementById('resDailyUnemp').innerText = '약 ' + Math.round(dailyBase).toLocaleString() + ' 원/일';
+        document.getElementById('resTotalUnemp').innerText = '약 ' + Math.round(totalUnemp).toLocaleString() + ' 원';
+        document.getElementById('resultBox5').style.display = 'block';
+    }
+
+    function calcAgeAndDday() {
+        const birth = new Date(document.getElementById('birthDate').value);
+        const target = new Date(document.getElementById('targetDate').value);
+        const today = new Date();
+        
+        let age = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) { age--; }
+
+        const diffTime = target - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        document.getElementById('resManAge').innerText = age + ' 세';
+        document.getElementById('resDday').innerText = diffDays >= 0 ? 'D-' + diffDays : 'D+' + Math.abs(diffDays);
+        document.getElementById('resultBox6').style.display = 'block';
     }
 </script>
 
