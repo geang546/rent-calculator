@@ -161,13 +161,13 @@
 
     <!-- 탭 메뉴 (7개) -->
     <div class="tab-menu">
-        <button class="tab-btn active" onclick="switchTab(1)">전월세 전환율</button>
-        <button class="tab-btn" onclick="switchTab(2)">연말정산</button>
-        <button class="tab-btn" onclick="switchTab(3)">주휴수당·알바</button>
-        <button class="tab-btn" onclick="switchTab(4)">세전·세후월급</button>
-        <button class="tab-btn" onclick="switchTab(5)">퇴직금 계산</button>
-        <button class="tab-btn" onclick="switchTab(6)">실업급여 계산</button>
-        <button class="tab-btn" onclick="switchTab(7)" style="grid-column: span 3;">만나이·디데이</button>
+        <button type="button" class="tab-btn active" onclick="switchTab(1)">전월세 전환율</button>
+        <button type="button" class="tab-btn" onclick="switchTab(2)">연말정산</button>
+        <button type="button" class="tab-btn" onclick="switchTab(3)">주휴수당·알바</button>
+        <button type="button" class="tab-btn" onclick="switchTab(4)">세전·세후월급</button>
+        <button type="button" class="tab-btn" onclick="switchTab(5)">퇴직금 계산</button>
+        <button type="button" class="tab-btn" onclick="switchTab(6)">실업급여 계산</button>
+        <button type="button" class="tab-btn" onclick="switchTab(7)" style="grid-column: span 3;">만나이·디데이</button>
     </div>
 
     <!-- 1번: 전월세 전환율 계산기 -->
@@ -177,7 +177,7 @@
         <div class="form-group"><label for="monthlyDeposit">변경할 보증금 (원)</label><input type="text" id="monthlyDeposit" value="200,000,000" oninput="formatInputNumber(this, 'monthlyDepUnit')"></div>
         <div class="korean-unit" id="monthlyDepUnit">2억 원</div>
         <div class="form-group"><label for="interestRate">전월세 전환율 (%)</label><input type="number" id="interestRate" step="0.1" value="5.5"></div>
-        <button class="calc-btn" onclick="calcRent()">월세 계산하기</button>
+        <button type="button" class="calc-btn" onclick="calcRent()">월세 계산하기</button>
         <div class="result-box" id="resultBox1">
             <h3>전월세 전환 계산 결과</h3>
             <div class="result-item"><span>보증금 차액:</span><span class="result-value" id="resDiffDeposit">0 원</span></div>
@@ -191,7 +191,7 @@
         <div class="korean-unit" id="salaryUnit">4,000만 원</div>
         <div class="form-group"><label for="cardSpent">신용·체크카드 총 사용액 (원)</label><input type="text" id="cardSpent" value="15,000,000" oninput="formatInputNumber(this, 'cardUnit')"></div>
         <div class="korean-unit" id="cardUnit">1,500만 원</div>
-        <button class="calc-btn" onclick="calcTax()">예상 환급금 계산하기</button>
+        <button type="button" class="calc-btn" onclick="calcTax()">예상 환급금 계산하기</button>
         <div class="result-box" id="resultBox2">
             <h3>연말정산 간이 계산 결과</h3>
             <div class="result-item"><span>소득공제 예상액:</span><span class="result-value" id="resDeduction">0 원</span></div>
@@ -204,7 +204,18 @@
         <div class="form-group"><label for="hourlyWage">시급 (원)</label><input type="text" id="hourlyWage" value="10,030" oninput="formatInputNumber(this, 'wageUnit')"></div>
         <div class="korean-unit" id="wageUnit">1만 30 원</div>
         <div class="form-group"><label for="weeklyHours">일주일 총 근로시간 (시간)</label><input type="number" id="weeklyHours" value="40"></div>
-        <button class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
+        <button type="button" class="calc-btn" onclick="calcSalary()">주휴수당 포함 월급 계산하기</button>
         <div class="result-box" id="resultBox3">
             <h3>알바·급여 계산 결과</h3>
-            <div class="result-item"><span>주휴수당 여부:</span><span class="result-value" id="resHolidayPay
+            <div class="result-item"><span>주휴수당 여부:</span><span class="result-value" id="resHolidayPayStatus">대상</span></div>
+            <div class="result-item"><span>예상 월 실수령 환산:</span><span class="result-value highlight" id="resTotalMonthPay">0 원</span></div>
+        </div>
+    </div>
+
+    <!-- 4번: 세전세후 월급 -->
+    <div id="calc4" class="calculator-content">
+        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="text" id="preTaxSalary" value="3,000,000" oninput="formatInputNumber(this, 'preTaxUnit')"></div>
+        <div class="korean-unit" id="preTaxUnit">300만 원</div>
+        <button type="button" class="calc-btn" onclick="calcNetSalary()">세후 실수령액 계산하기</button>
+        <div class="result-box" id="resultBox4">
+            <h3>월급 실수령액 추정 결과</h3>
