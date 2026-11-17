@@ -52,7 +52,6 @@
             color: #64748b;
             margin-bottom: 18px;
         }
-        /* 탭 메뉴 스타일 (7개 대응 그리드) */
         .tab-menu {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -145,6 +144,13 @@
         .highlight {
             color: #dc2626;
         }
+        .korean-unit {
+            font-size: 12px;
+            color: #64748b;
+            text-align: right;
+            margin-top: 2px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -166,8 +172,10 @@
 
     <!-- 1번: 전월세 전환율 계산기 -->
     <div id="calc1" class="calculator-content active">
-        <div class="form-group"><label for="jeonseDeposit">기존 전세 보증금 (원)</label><input type="number" id="jeonseDeposit" value="300000000"></div>
-        <div class="form-group"><label for="monthlyDeposit">변경할 보증금 (원)</label><input type="number" id="monthlyDeposit" value="50000000"></div>
+        <div class="form-group"><label for="jeonseDeposit">기존 전세 보증금 (원)</label><input type="number" id="jeonseDeposit" value="300000000" oninput="showKoreanUnit(this, 'jeonseUnit')"></div>
+        <div class="korean-unit" id="jeonseUnit">3억 원</div>
+        <div class="form-group"><label for="monthlyDeposit">변경할 보증금 (원)</label><input type="number" id="monthlyDeposit" value="200000000" oninput="showKoreanUnit(this, 'monthlyDepUnit')"></div>
+        <div class="korean-unit" id="monthlyDepUnit">2억 원</div>
         <div class="form-group"><label for="interestRate">전월세 전환율 (%)</label><input type="number" id="interestRate" step="0.1" value="5.5"></div>
         <button class="calc-btn" onclick="calcRent()">월세 계산하기</button>
         <div class="result-box" id="resultBox1">
@@ -179,8 +187,10 @@
 
     <!-- 2번: 연말정산 -->
     <div id="calc2" class="calculator-content">
-        <div class="form-group"><label for="salary">연간 총급여액 (원)</label><input type="number" id="salary" value="40000000"></div>
-        <div class="form-group"><label for="cardSpent">신용·체크카드 총 사용액 (원)</label><input type="number" id="cardSpent" value="15000000"></div>
+        <div class="form-group"><label for="salary">연간 총급여액 (원)</label><input type="number" id="salary" value="40000000" oninput="showKoreanUnit(this, 'salaryUnit')"></div>
+        <div class="korean-unit" id="salaryUnit">4,000만 원</div>
+        <div class="form-group"><label for="cardSpent">신용·체크카드 총 사용액 (원)</label><input type="number" id="cardSpent" value="15000000" oninput="showKoreanUnit(this, 'cardUnit')"></div>
+        <div class="korean-unit" id="cardUnit">1,500만 원</div>
         <button class="calc-btn" onclick="calcTax()">예상 환급금 계산하기</button>
         <div class="result-box" id="resultBox2">
             <h3>연말정산 간이 계산 결과</h3>
@@ -203,7 +213,8 @@
 
     <!-- 4번: 세전세후 월급 -->
     <div id="calc4" class="calculator-content">
-        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="number" id="preTaxSalary" value="3000000"></div>
+        <div class="form-group"><label for="preTaxSalary">월 세전 급여 (원)</label><input type="number" id="preTaxSalary" value="3000000" oninput="showKoreanUnit(this, 'preTaxUnit')"></div>
+        <div class="korean-unit" id="preTaxUnit">300만 원</div>
         <button class="calc-btn" onclick="calcNetSalary()">세후 실수령액 계산하기</button>
         <div class="result-box" id="resultBox4">
             <h3>월급 실수령액 추정 결과</h3>
@@ -214,7 +225,8 @@
 
     <!-- 5번: 퇴직금 계산기 -->
     <div id="calc5" class="calculator-content">
-        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="number" id="retireMonthsPay" value="9000000"></div>
+        <div class="form-group"><label for="retireMonthsPay">최근 3개월 총 급여 합계 (원)</label><input type="number" id="retireMonthsPay" value="9000000" oninput="showKoreanUnit(this, 'retireUnit')"></div>
+        <div class="korean-unit" id="retireUnit">900만 원</div>
         <div class="form-group"><label for="totalWorkingYears">총 재직 일수</label><input type="number" id="totalWorkingYears" value="1095"></div>
         <button class="calc-btn" onclick="calcRetirement()">예상 퇴직금 계산하기</button>
         <div class="result-box" id="resultBox5">
@@ -226,7 +238,8 @@
 
     <!-- 6번: 실업급여 계산기 -->
     <div id="calc6" class="calculator-content">
-        <div class="form-group"><label for="unemploymentMonthly">퇴직 전 월 평균 급여 (세전, 원)</label><input type="number" id="unemploymentMonthly" value="3000000"></div>
+        <div class="form-group"><label for="unemploymentMonthly">퇴직 전 월 평균 급여 (세전, 원)</label><input type="number" id="unemploymentMonthly" value="3000000" oninput="showKoreanUnit(this, 'unempUnit')"></div>
+        <div class="korean-unit" id="unempUnit">300만 원</div>
         <div class="form-group"><label for="workingMonths">고용보험 가입 기간 (개월)</label><input type="number" id="workingMonths" value="36"></div>
         <button class="calc-btn" onclick="calcUnemployment()">예상 실업급여 계산하기</button>
         <div class="result-box" id="resultBox6">
@@ -250,6 +263,27 @@
 </div>
 
 <script>
+    // 숫자를 '억, 만' 한글 단위로 바꿔주는 똑똑한 함수
+    function formatKoreanCurrency(number) {
+        if (isNaN(number) || number === 0) return '0 원';
+        const억 = Math.floor(number / 100000000);
+        const만 = Math.floor((number % 100000000) / 10000);
+        const나머지 = number % 10000;
+
+        let result = '';
+        if (억 > 0) result += 억 + '억 ';
+        if (만 > 0) result += 만.toLocaleString() + '만 ';
+        if (나머지 > 0 && 억 === 0) result += 나머지.toLocaleString() + ' ';
+        
+        return result.trim() + ' 원';
+    }
+
+    // 입력 칸 아래에 한글 단위 실시간 표시
+    function showKoreanUnit(inputElement, unitId) {
+        const val = Number(inputElement.value) || 0;
+        document.getElementById(unitId).innerText = formatKoreanCurrency(val);
+    }
+
     function switchTab(tabNum) {
         document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
         document.querySelectorAll('.calculator-content').forEach(content => content.classList.remove('active'));
@@ -258,72 +292,85 @@
     }
 
     function calcRent() {
-        const jeonse = Number(document.getElementById('jeonseDeposit').value);
-        const monthlyDep = Number(document.getElementById('monthlyDeposit').value);
-        const rate = Number(document.getElementById('interestRate').value);
+        const jeonse = Number(document.getElementById('jeonseDeposit').value) || 0;
+        const monthlyDep = Number(document.getElementById('monthlyDeposit').value) || 0;
+        const rate = Number(document.getElementById('interestRate').value) || 0;
         const diff = jeonse - monthlyDep;
         const annualRent = diff * (rate / 100);
         const monthlyRent = Math.round(annualRent / 12);
-        document.getElementById('resDiffDeposit').innerText = diff.toLocaleString() + ' 원';
-        document.getElementById('resMonthlyRent').innerText = monthlyRent.toLocaleString() + ' 원';
+        
+        document.getElementById('resDiffDeposit').innerText = formatKoreanCurrency(diff);
+        document.getElementById('resMonthlyRent').innerText = formatKoreanCurrency(monthlyRent);
         document.getElementById('resultBox1').style.display = 'block';
     }
 
     function calcTax() {
-        const salary = Number(document.getElementById('salary').value);
-        const cardSpent = Number(document.getElementById('cardSpent').value);
+        const salary = Number(document.getElementById('salary').value) || 0;
+        const cardSpent = Number(document.getElementById('cardSpent').value) || 0;
         const threshold = salary * 0.25;
         let deduction = cardSpent > threshold ? (cardSpent - threshold) * 0.3 : 0;
         const estimatedRefund = Math.round(deduction * 0.15);
-        document.getElementById('resDeduction').innerText = Math.round(deduction).toLocaleString() + ' 원';
-        document.getElementById('resRefund').innerText = '약 ' + estimatedRefund.toLocaleString() + ' 원 환급 예상';
+        
+        document.getElementById('resDeduction').innerText = formatKoreanCurrency(Math.round(deduction));
+        document.getElementById('resRefund').innerText = '약 ' + formatKoreanCurrency(estimatedRefund) + ' 환급 예상';
         document.getElementById('resultBox2').style.display = 'block';
     }
 
     function calcSalary() {
-        const wage = Number(document.getElementById('hourlyWage').value);
-        const weeklyHours = Number(document.getElementById('weeklyHours').value);
+        const wage = Number(document.getElementById('hourlyWage').value) || 0;
+        const weeklyHours = Number(document.getElementById('weeklyHours').value) || 0;
         let isHolidayEligible = weeklyHours >= 15;
         let weeklyHolidayHours = isHolidayEligible ? (weeklyHours / 40) * 8 : 0;
         let monthlyPay = Math.round(((weeklyHours + weeklyHolidayHours) * wage) * 4.345);
+        
         document.getElementById('resHolidayPayStatus').innerText = isHolidayEligible ? '지급 대상 (주 15시간 이상)' : '대상 아님';
-        document.getElementById('resTotalMonthPay').innerText = monthlyPay.toLocaleString() + ' 원';
+        document.getElementById('resTotalMonthPay').innerText = formatKoreanCurrency(monthlyPay);
         document.getElementById('resultBox3').style.display = 'block';
     }
 
     function calcNetSalary() {
-        const preTax = Number(document.getElementById('preTaxSalary').value);
+        const preTax = Number(document.getElementById('preTaxSalary').value) || 0;
         const deduction = Math.round(preTax * 0.045 + preTax * 0.0399 + preTax * 0.009 + (preTax > 2000000 ? (preTax - 2000000) * 0.066 + 55000 : 20000));
         const netPay = preTax - deduction;
-        document.getElementById('resTotalTax').innerText = deduction.toLocaleString() + ' 원';
-        document.getElementById('resNetPay').innerText = netPay.toLocaleString() + ' 원';
+        
+        document.getElementById('resTotalTax').innerText = formatKoreanCurrency(deduction);
+        document.getElementById('resNetPay').innerText = formatKoreanCurrency(netPay);
         document.getElementById('resultBox4').style.display = 'block';
     }
 
     function calcRetirement() {
-        const monthsPay = Number(document.getElementById('retireMonthsPay').value);
-        const days = Number(document.getElementById('totalWorkingYears').value);
+        const monthsPay = Number(document.getElementById('retireMonthsPay').value) || 0;
+        const days = Number(document.getElementById('totalWorkingYears').value) || 0;
         const avgDailyWage = monthsPay / 92;
         const retirementMoney = (avgDailyWage * 30) * (days / 365);
-        document.getElementById('resAvgDailyWage').innerText = Math.round(avgDailyWage).toLocaleString() + ' 원';
-        document.getElementById('resRetireMoney').innerText = Math.round(retirementMoney).toLocaleString() + ' 원';
+        
+        document.getElementById('resAvgDailyWage').innerText = formatKoreanCurrency(Math.round(avgDailyWage));
+        document.getElementById('resRetireMoney').innerText = formatKoreanCurrency(Math.round(retirementMoney));
         document.getElementById('resultBox5').style.display = 'block';
     }
 
     function calcUnemployment() {
-        const monthly = Number(document.getElementById('unemploymentMonthly').value);
-        const months = Number(document.getElementById('workingMonths').value);
+        const monthly = Number(document.getElementById('unemploymentMonthly').value) || 0;
         let dailyBase = (monthly / 30) * 0.6;
         if(dailyBase > 66000) dailyBase = 66000;
         const totalUnemp = dailyBase * 150;
-        document.getElementById('resDailyUnemp').innerText = '약 ' + Math.round(dailyBase).toLocaleString() + ' 원/일';
-        document.getElementById('resTotalUnemp').innerText = '약 ' + Math.round(totalUnemp).toLocaleString() + ' 원';
+        
+        document.getElementById('resDailyUnemp').innerText = '약 ' + formatKoreanCurrency(Math.round(dailyBase)) + '/일';
+        document.getElementById('resTotalUnemp').innerText = '약 ' + formatKoreanCurrency(Math.round(totalUnemp));
         document.getElementById('resultBox6').style.display = 'block';
     }
 
     function calcAgeAndDday() {
-        const birth = new Date(document.getElementById('birthDate').value);
-        const target = new Date(document.getElementById('targetDate').value);
+        const birthVal = document.getElementById('birthDate').value;
+        const targetVal = document.getElementById('targetDate').value;
+        
+        if(!birthVal || !targetVal) {
+            alert('생년월일과 디데이 목표일을 모두 선택해주세요!');
+            return;
+        }
+
+        const birth = new Date(birthVal);
+        const target = new Date(targetVal);
         const today = new Date();
         
         let age = today.getFullYear() - birth.getFullYear();
